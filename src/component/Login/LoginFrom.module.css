@@ -1,0 +1,70 @@
+.login {
+  width: 90%;
+  max-width: 40rem;
+  margin: 2rem auto;
+  padding: 2rem;
+  margin-top: 20px;
+}
+
+.control {
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.control label .control input {
+  display: block;
+}
+
+.control label {
+  font-weight: bold;
+  flex: 1;
+  color: #464646;
+  margin-bottom: 0.5rem;
+}
+
+.control input {
+  flex: 3;
+  font: inherit;
+  padding: 0.35rem 0.35rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.control input:focus {
+  outline: none;
+  border-color: #4f005f;
+  background: #f6dbfc;
+}
+
+.button-control {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.button-control button {
+    padding: .5rem 1rem;
+    color: white;
+    font: inherit;
+    border-radius: 6px;
+    background: #dd0db0;
+    border: 1px solid #ccc;
+}
+
+.control.invalid input {
+  border-color: red;
+  background: #fbdada;
+}
+
+.actions {
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .control {
+    align-items: center;
+    flex-direction: row;
+  }
+}

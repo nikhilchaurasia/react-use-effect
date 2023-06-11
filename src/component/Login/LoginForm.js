@@ -1,44 +1,65 @@
 import styles from "./LoginFrom.module.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useReducer } from "react";
 import Card from "../../UI/Card";
 import Button from "../../UI/Button";
 
+const usernameReducer = (state, action) => {
+    if (action.type === 'USER_INPUT') {
+        return {value: action.value, isValid: action.value.length > 3}
+    }
+    if (action.type === 'ON_BLUR') {
+        return {value: state.value, isValid: state.value.length > 3}
+    }
+  return { value: '', isValid: false };
+};
+
+const passwordReducer = (state, action) => {
+    if (action.type === 'USER_INPUT') {
+        return {value: action.value, isValid: action.value.length > 7}
+    }
+    if (action.type === 'ON_BLUR') {
+        return {value: state.value, isValid: state.value.length > 7}
+    }
+    return { value: '', isValid: false };
+};
+
 const LoginForm = (props) => {
-  const [username, setUsername] = useState("");
-  const [isvalidUsername, setIsValidUsername] = useState(false);
-  const [password, setPassword] = useState("");
-  const [isValidPassword, setValidPassword] = useState(false);
   const [isValidForm, setValidForm] = useState(false);
+  const [usernameState, dispatchEmail] = useReducer(usernameReducer, {value: '', isValid: false});
+  const [passwordState, dispatchPassword] = useReducer(passwordReducer, {value: '', isValid: false});
+
+  const {isValid: usernameIsvalid} = usernameState
+  const {isValid: passswordIsvalid} = passwordState
 
   useEffect(() => {
     const timeoutIdentifier = setTimeout(() => {
       console.log("Use effect called");
-      setValidForm(username.trim().length > 3 && password.trim().length > 7);
+      setValidForm(usernameState.value.trim().length > 3 && passwordState.value.trim().length > 7);
     }, 500);
     return () => {
-        console.log("Cleanup called");
-        clearTimeout(timeoutIdentifier)
-    }
-  }, [username, password]);
+      console.log("Cleanup called");
+      clearTimeout(timeoutIdentifier);
+    };
+  }, [usernameIsvalid, passswordIsvalid]);
 
   const usernameChangeHandler = (event) => {
-    setUsername(event.target.value);
+    dispatchEmail({type: "USER_INPUT", value : event.target.value})
   };
 
   const passwordChangeHandler = (event) => {
-    setPassword(event.target.value);
+    dispatchPassword({type: "USER_INPUT", value : event.target.value})
   };
 
   const loginhandler = () => {
-    props.onLogin(username, password);
+    props.onLogin(usernameState.value, passwordState.value);
   };
 
   const validUsernameHandler = () => {
-    setIsValidUsername(username.trim().length > 3);
+    dispatchEmail({type: "ON_BLUR"})
   };
 
   const validPasswordHandler = () => {
-    setValidPassword(password.trim().length > 7);
+    dispatchEmail({type: "ON_BLUR"})
   };
 
   return (
@@ -46,12 +67,12 @@ const LoginForm = (props) => {
       <form onSubmit={loginhandler}>
         <div
           className={`${styles.control} ${
-            isvalidUsername === false ? styles.invalid : ""
+            usernameState.isValid === false ? styles.invalid : ""
           }`}
         >
           <label htmlFor="username">Username</label>
           <input
-            value={username}
+            value={usernameState.value}
             type="text"
             id="username"
             onChange={usernameChangeHandler}
@@ -60,13 +81,13 @@ const LoginForm = (props) => {
         </div>
         <div
           className={`${styles.control} ${
-            isValidPassword === false ? styles.invalid : ""
+            passwordState.isValid === false ? styles.invalid : ""
           }`}
         >
           <label htmlFor="password">Password</label>
           <input
             type="password"
-            value={password}
+            value={passwordState.value}
             id="password"
             onChange={passwordChangeHandler}
             onBlur={validPasswordHandler}

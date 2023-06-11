@@ -5,7 +5,7 @@ const MainHeader = props => {
     return (
         <header className={styles['main-header']}>
             <h1>Food app</h1>
-            <Navigation isAuthenicated={props.isAuthenicated} onLogout={props.onLogout}/>
+            <Navigation onLogout={props.onLogout}/>
         </header>
     )
 }
